@@ -2,12 +2,13 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 )
 
 func findElementById(id string, fileRecords []FileRecord) ([]byte, error) {
 	if id == "" {
-		return nil, fmt.Errorf(ErrorMsg, Id)
+		return nil, errors.New(fmt.Sprintf(ErrorMsg, Id))
 	}
 
 	for i := 0; i < len(fileRecords); i++ {
@@ -20,7 +21,7 @@ func findElementById(id string, fileRecords []FileRecord) ([]byte, error) {
 
 func removeElementById(id string, fileName string, fileRecords []FileRecord) ([]byte, error) {
 	if id == "" {
-		return nil, fmt.Errorf(ErrorMsg, Id)
+		return nil, errors.New(fmt.Sprintf(ErrorMsg, Id))
 	}
 
 	modifiedRecords := make([]FileRecord, 0)
@@ -29,7 +30,7 @@ func removeElementById(id string, fileName string, fileRecords []FileRecord) ([]
 			modifiedRecords = append(modifiedRecords, fileRecords[i])
 		}
 	}
-
+	// write updated records to file
 	if len(modifiedRecords) != len(fileRecords) {
 		data, _ := json.Marshal(modifiedRecords)
 		return writeDataToFile(fileName, data)
@@ -39,7 +40,7 @@ func removeElementById(id string, fileName string, fileRecords []FileRecord) ([]
 
 func addElementToFile(items string, fileName string, fileRecords []FileRecord) ([]byte, error) {
 	if items == "" {
-		return nil, fmt.Errorf(ErrorMsg, Item)
+		return nil, errors.New(fmt.Sprintf(ErrorMsg, Item))
 	}
 
 	var itemsToAdd FileRecord
@@ -58,4 +59,5 @@ func addElementToFile(items string, fileName string, fileRecords []FileRecord) (
 	modifiedRecords = append(modifiedRecords, itemsToAdd)
 	data, _ := json.Marshal(modifiedRecords)
 	return writeDataToFile(fileName, data)
+
 }
